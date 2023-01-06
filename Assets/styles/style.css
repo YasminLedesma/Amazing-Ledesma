@@ -43,7 +43,7 @@ header {
     padding: 1rem;
 }
 
-img, svg{
+.imglogo{
 background-color: rgba(255, 255, 255, 0.446);
 border-radius: 1rem;
     width: 120px;
@@ -57,26 +57,26 @@ main{
 .card-img-top{
     height: 9rem;
     width: 16rem;
+    border-radius: 1rem;
 }
 
 .card-details{
     justify-content: center;
     display: flex;
     flex-wrap: wrap;
-    padding-top: 6rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
 }
-.text-details{
-    background-color: white;
+.staylist{
+    width: 94%;
+    background-color: rgba(255, 255, 255, 0.702);
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0.2rem;
     border-top-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
 }
-.card-details img{
-    width: 28rem;
-    height: 16rem;
-}
+
 .row{
     display: flex;
     align-items: center;
@@ -167,4 +167,27 @@ main .card-position {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+}
+
+.detailed-img{
+    width:95%;
+    display: flex;
+    flex-direction: column;
+    border-top-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+.container-img-details{
+    display: flex;
+    justify-content: center;
+width: 45rem;
+max-width: 42rem;
+min-width: 10rem;
+}
+.container-text-card{
+    display: flex;
+    justify-content: center;
+}
+.abajocard{
+display: flex;
+justify-content: space-between;
 }
