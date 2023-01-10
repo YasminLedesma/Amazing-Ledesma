@@ -99,15 +99,8 @@ main{
 
 .conttable{
     display: flex;
+    padding: 2rem;
     justify-content: center;
-}
-
-.table{
-    margin:0.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 58.5rem !important;
 }
 
 .contform{

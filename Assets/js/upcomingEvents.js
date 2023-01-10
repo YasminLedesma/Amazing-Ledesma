@@ -1,28 +1,41 @@
 //enlazo html y js---vienen de html
-let homejs = document.getElementById("cards-section")
-const search = document.getElementById('search-place')
-const check = document.getElementById("category-place")
+let $cards = document.getElementById("cards-section")
+const $search = document.getElementById('search-place')
+const $check = document.getElementById("category-place")
+
+let upcoming; //todo, toda la info
+let coming
+
+fetch("https://mindhub-xj03.onrender.com/api/amazing")
+.then(data => data.json())
+.then(data => {
+    upcoming = data
+    coming = upcoming.events.filter(objetoData => objetoData.date > upcoming.currentDate)
+    renderTemplate (createCards(coming), $cards)
+    $check.innerHTML = generarCheckbox(upcoming.events)
+    $search.addEventListener( 'input', filtroCruzado)
+    $check.addEventListener('change', filtroCruzado)
+})
+.catch(err => console.log(err))
 
 //funcion para filtrar las cards
-const upcoming = data.events.filter(objetoData => objetoData.date > data.currentDate)
+//const upcoming = data.events.filter(objetoData => objetoData.date > data.currentDate)
 
 //crear cards
-function createCards(lista){
+function createCards(eventos){
     let cardsFunct = ""
-    for (let walk of lista){
-        
+    for (let evento of eventos){
             let template =  
-                `
-                <div class="card" style="width: 16rem;">
-                <img src="${walk.image}" class="card-img-top" alt="${walk.name}">
+                `<div class="card" style="width: 16rem;">
+                <img src="${evento.image}" class="card-img-top" alt="${evento.name}">
                     <div class="card-body">
-                    <h5 class="card-title">${walk.name}</h5>
-                    <p class="card-text">${walk.date}</p>
-                    <p class="card-text">${walk.category}</p>
-                    <p class="card-text">${walk.place}</p>
+                    <h5 class="card-title">${evento.name}</h5>
+                    <p class="card-text">${evento.date}</p>
+                    <p class="card-text">${evento.category}</p>
+                    <p class="card-text">${evento.place}</p>
                     <div class="abajocard">
-                    <p class="card-text">USD ${walk.price}</p>
-                    <a href="./details.html?idUrl=${walk._id}" class="btn btn-secondary">View More</a>
+                    <p class="card-text">USD ${evento.price}</p>
+                    <a href="./details.html?idUrl=${evento._id}" class="btn btn-secondary">View More</a>
                     </div>
                 </div>
                 </div> `
@@ -31,7 +44,7 @@ function createCards(lista){
     }
     return cardsFunct
 }
-renderTemplate (createCards(upcoming), homejs)
+/*renderTemplate (createCards(upcoming), $cards)
 
 //Funcion para filtrar categorias
 const sinRepetir = [] 
@@ -42,9 +55,11 @@ categorias.forEach(categorias => {
     if (!sinRepetir.includes (categorias)){
         sinRepetir.push (categorias)}
     })
-    
+    */
+
 //Creacion de los checkbox
-    function generarCheckbox (categorias){
+    function generarCheckbox (info){
+        const categorias= new Set(info.map(infoEvent=> infoEvent.category))
         let template = ""
         categorias.forEach(categoria =>{
             template += `<div class="form-check form-check-inline">   
@@ -56,17 +71,17 @@ categorias.forEach(categorias => {
         return template
     }
     //inner para pasar checks a pantaia
-    check.innerHTML = generarCheckbox(sinRepetir)
+ //   check.innerHTML = generarCheckbox(sinRepetir)
 
 
 //funcion para el filtro de los check
     function checkFilter (touchs, categoriesList){
         let valuesCheck = []; 
         for (let touch of touchs){ 
-            if (touch.checked)
-            valuesCheck.push(touch.value.toLowerCase())
+            if (touch.checked){
+            valuesCheck.push(touch.value.toLowerCase())}
         }
-        let filters = categoriesList.filter(pEquis => valuesCheck.includes(pEquis.category.toLowerCase()))
+        let filters = categoriesList.filter(evento => valuesCheck.includes(evento.category.toLowerCase()))
         if (valuesCheck.length === 0){
             return categoriesList
         }
@@ -74,29 +89,28 @@ categorias.forEach(categorias => {
             return filters
         }
     }
-    check.addEventListener('change', filtroCruzado)
-    
+
+//$check.addEventListener('change', filtroCruzado)
+//$search.addEventListener( 'input', filtroCruzado)
 
 //funcion para el filtro del search
-search.addEventListener( 'input', filtroCruzado)
-
 function searchFilter(inputFind, categoriesList){
-    const filterSequis = categoriesList.filter(paramEquis => {
-        return paramEquis.name.toLowerCase().startsWith(inputFind.value.toLowerCase())
+    const filterSequis = categoriesList.filter(evento => {
+        return evento.name.toLowerCase().startsWith(inputFind.value.toLowerCase())
     });
     return filterSequis
 }
 // funcion del filtro cruzado
 function filtroCruzado(evento){
   let checkbuttons = document.querySelectorAll(".form-check-input")
-    const filterPerFind = searchFilter (search, upcoming)
+    const filterPerFind = searchFilter ($search, coming)
     const filterPerCheack = checkFilter (checkbuttons, filterPerFind)
     if(filterPerCheack.length === 0) {
         let alert = `<h3 class="alert">Is Not Found</h3>`
-        renderTemplate(alert, homejs)
+        renderTemplate(alert, $cards)
     }
     else {
-        renderTemplate(createCards(filterPerCheack), homejs)
+        renderTemplate(createCards(filterPerCheack), $cards)
     }
 }
 //funcion del rendertemplate
@@ -104,4 +118,4 @@ function renderTemplate(template, ubicacion){
     ubicacion.innerHTML = template
 }
 
-filtroCruzado()
+//filtroCruzado()

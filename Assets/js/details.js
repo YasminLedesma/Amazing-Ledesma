@@ -1,19 +1,21 @@
 //enlazo
 let cadenaParametroUrl = location.search;//dire de tarjetas
-let parametros = new URLSearchParams(cadenaParametroUrl);//para vincular, new palabra reservada crea objeto
+let parametros = new URLSearchParams(cadenaParametroUrl); //para vincular, new palabra reservada crea objeto
 let idCard = parametros.get("idUrl");//vincular tarjetas con id unico(c/u)
-
+//nuevo
 let contenedor = document.getElementById("detail-place");
+let dataJson;
 
-let propiedadEvents = data.events;
+fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then(data => data.json())
+    .then( data => {
+        dataJson = data
+        detailCard(dataJson.events.find(evento => evento._id == idCard), contenedor)
+    })
+    .catch(err => console.log(err)) //identificar error
 
-let cardEncontrada = propiedadEvents.find(
-  (propiedadEvents) => propiedadEvents._id == idCard
-);
-
-
-function detailCard(propiedadEvents) {
-  contenedor.innerHTML = "";
+function detailCard(propiedadEvents, contenedor) {
+  contenedor.innerHTML= "";
   let asistencia = "";
   if(propiedadEvents.assistance){
   asistencia= `
@@ -43,12 +45,12 @@ function detailCard(propiedadEvents) {
           <dt>Place:</dt>
           <dd>${propiedadEvents.place}</dd>
           <div class="d-flex  justify-content-between flex-wrap">
+            <div>
+              <dt>Capacity:</dt>
+              <dd>${propiedadEvents.capacity}</dd>
+            </div>
           <div>
-          <dt>Capacity:</dt>
-          <dd>${propiedadEvents.capacity}</dd>
-          </div>
-          <div>
-          ${asistencia}
+              ${asistencia}
           </div>
           <div>
           <dt>Price:</dt>
@@ -62,4 +64,4 @@ function detailCard(propiedadEvents) {
   contenedor.innerHTML = template;
 }
 
-detailCard(cardEncontrada);
+//detailCard(cardEncontrada);
